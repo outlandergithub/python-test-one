@@ -7,7 +7,7 @@ on:
       deployment_targe:
         description: select tests to run
         required: true
-        type: choise
+        type: choice
         default: all
         options:
           - all
