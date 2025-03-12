@@ -6,4 +6,4 @@ Set up this project using following instructions:
 4. Set up virtual env "venv" in root directory of this cloned project on your OS if you don't want conflicts with the preinstalled Python in your OS where you clone this project to. 
    Otherwise don't set up virtual env, if you will run it in docker container or if you don't have conflicts with the preinstalled Python in your OS
 5. Install all needed packages for this project with "pip install -r requirements.txt" command in your terminal
-6. Run tests with "pytest -v -s" command in your terminal to get comprehensible results
+6. Run tests with "pytest -v -s -r" command in your terminal to get comprehensible results

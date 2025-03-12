@@ -12,5 +12,10 @@ def test_one(before_after: None):
 def test_two(before_after: None):
     assert "one" == "one"
 
+@pytest.mark.xfail
+def test_fail(before_after: None):
+    assert not "one" == "one"
+
+@pytest.mark.skip(reason="Skipped on purpose for making more examples")
 def test_fail(before_after: None):
     assert not "one" == "one"
