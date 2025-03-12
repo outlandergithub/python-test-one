@@ -1,0 +1,8 @@
+xlsenv
+inventory-with-sumtotal.xlsx
+__pycache__
+.pytest_cache
+*/__pycache__
+*/.pytest_cache
+.DS_Store
+*/.DS_Store
