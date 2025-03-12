@@ -27,9 +27,8 @@ class HomePage:
             products = wait_more.until(expected_conditions.visibility_of_all_elements_located((By.CLASS_NAME, 'card')))
             products_count = len(products)
         except TimeoutException:
-            print("Surprise, ************\n"
-                  "Something went wront - either loading the page was too low, or locator is no longer correct.\n"
-                  "Therefore elements were not found!")
+            print("Elements were not found!\n"
+                  "Something went wront - either loading the page was too low, or locator is no longer correct.\n")
             return 0
         #assert products_count == count
         return products_count
