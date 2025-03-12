@@ -1,14 +1,7 @@
 import openpyxl
-import os
 
 inv_file = openpyxl.load_workbook("inventory.xlsx")
 product_list = inv_file["Sheet1"]
-
-#products_per_suppliet = list()
-#print(type(products_per_suppliet))
-#
-#products_per_supplietset = set()
-#print(type(products_per_supplietset))
 
 products_per_supplier = dict()
 total_value_per_supplier = dict()
