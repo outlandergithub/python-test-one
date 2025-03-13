@@ -1,14 +1,10 @@
 import pytest
 
-@pytest.fixture()
-def before_after():
-    print("Fixture before running test")
-    yield
-    print("Fixture after running test")
-
+@pytest.mark.smoke
 def test_one(before_after: None):
     assert 1 == 1
 
+@pytest.mark.regression
 def test_two(before_after: None):
     assert "one" == "one"
 

@@ -1,5 +1,5 @@
 xlsenv
-inventory-with-sumtotal.xlsx
+new-inventory-with-sumtotal*.xlsx
 __pycache__
 .pytest_cache
 */__pycache__

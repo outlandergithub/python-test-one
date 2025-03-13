@@ -1,6 +1,7 @@
 import openpyxl
+from datetime import datetime
 
-inv_file = openpyxl.load_workbook("inventory.xlsx")
+inv_file = openpyxl.load_workbook("resources/inventory.xlsx")
 product_list = inv_file["Sheet1"]
 
 products_per_supplier = dict()
@@ -45,6 +46,7 @@ print(products_per_supplier)
 print(total_value_per_supplier)
 print(product_no_under_21)
 
-inv_file.save("inventory-with-sumtotal.xlsx")
+current_datetime = datetime.now()
+inv_file.save("resources/new-inventory-with-sumtotal-"+current_datetime.strftime('%m-%d-%Y--%H-%M-%S')+".xlsx")
 
  

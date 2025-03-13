@@ -22,23 +22,7 @@ if requests.get("https://api.restful-api.dev/objects").status_code == 405:
 
 else:
 
-    @pytest.fixture
-    def obj_id():
-        payload = {
-            "name": "Apple MacBook Pro 16",
-            "data": {
-            "year": 2019,
-            "price": 1849.99,
-            "CPU model": "Intel Core i9",
-            "Hard disk size": "1 TB"
-            }
-        }
-        print("Creating new product")
-        response = requests.post("https://api.restful-api.dev/objects", json=payload)
-        response_json = response.json()
-        yield response_json["id"]
-        requests.delete(f'https://api.restful-api.dev/objects/{response_json["id"]}', json=payload)
-
+    @pytest.mark.slow
     def test_create_object():
         payload = {
             "name": "Apple MacBook Pro 16",
@@ -55,6 +39,7 @@ else:
         assert response.status_code == 200
         assert payload["name"] == response_json["name"]
 
+    @pytest.mark.slow
     def test_get_object(obj_id):
         print(obj_id)
         response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}')
@@ -62,6 +47,7 @@ else:
         assert response.status_code == 200
         assert obj_id == response_json["id"]
 
+    @pytest.mark.slow
     def test_update_object(obj_id):
         print(obj_id)
         payload = {
@@ -78,7 +64,8 @@ else:
         print(response_json["name"] + " of " + response_json["id"])
         assert response.status_code == 200
         assert payload["name"] == response_json["name"]
-
+    
+    @pytest.mark.slow
     def test_delete_object(obj_id):
         print(obj_id)
         response = requests.delete(f"https://api.restful-api.dev/objects/{obj_id}")

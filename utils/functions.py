@@ -1,3 +1,5 @@
+import re
+
 def a1(a, b, c = None):
     print(a,b)
 
@@ -93,4 +95,20 @@ def d6(a, b, c = True, d = False):
 d6(*[1, 2], **{"c":"first", "d":"second"})   #*[1, 2] list кожен елемент попадає в окрему позиційну змінну.
                                                 #потім з **{"c":"first", "d":"second"} "c":"first" пробує попасти в змінну "c", і так далі
 
+s = "Example String"
+replaced = re.sub('[ES]', 'a', s)
+print(replaced)
 
+#line = re.sub(
+#           r"(?i)^.*interfaceOpDataFile.*$", 
+#           "interfaceOpDataFile %s" % fileIn, 
+#           line
+#       )
+
+#fileIn = "Alan Wake alan wake"
+#regex = re.compile(r"^.*a.*$", re.IGNORECASE)
+#list = ["Alan","Wake","2sa"]
+#for line in list:
+#    line = regex.sub("a" % fileIn, line)
+#    # do something with the updated line
+#    print(line)
