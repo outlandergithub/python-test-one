@@ -1,21 +1,31 @@
 name: Run all autotests
 
-
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - **
+  pull_request:
+    types:
+      - opened
+      - closed
+    branches:
+      - main
   workflow_dispatch:
     inputs:
-      deployment_targe:
-        description: select tests to run
+      deployment_target:
+        description: Select tests to run
         required: true
-        type: choise
-        default: all
+        type: choice
+        default: 'all'
         options:
           - all
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-    name: QA tests
+    name: Python API and UI QA autotests
     steps: 
       - name: Copy source code
         uses: actions/checkout@v4
@@ -24,6 +34,6 @@ jobs:
         with:
           python-version: "3.10"
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt && playwright install
       - name: Run tests
         run: pytest -v -s -rxXs

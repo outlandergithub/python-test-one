@@ -38,7 +38,7 @@ class HomePage(BasePage):
         menu_link.click()
 
     def count_found_monitors(self):
-        delay = 1
+        delay = 2
         #TODO move locators to separate module class
         try:
             WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locators.FIRST_PHONE_PRODUCT_PAGE_LINK))
