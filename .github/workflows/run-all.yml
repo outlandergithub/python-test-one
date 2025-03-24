@@ -1,17 +1,17 @@
 name: Run all autotests
 
 on:
-  push:
-    branches:
-      - main
-    tags:
-      - **
-  pull_request:
-    types:
-      - opened
-      - closed
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
+#    tags:
+#      - **
+#  pull_request:
+#    types:
+#      - opened
+#      - closed
+#    branches:
+#      - main
   workflow_dispatch:
     inputs:
       deployment_target:
