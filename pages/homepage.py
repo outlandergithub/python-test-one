@@ -3,14 +3,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import TimeoutException
 
+from locators.homepage_locators import HomePageLocators
 from pages.basepage import BasePage
 
 class HomePage(BasePage):
 
-    locator_first_product_page_link = (By.CSS_SELECTOR, 'h4 a.hrefch[href*="prod.html?idp_="]')
-    locator_monitors_categorylink = (By.CSS_SELECTOR, 'a[onclick="byCat(\'monitor\')"]')
-    locator_first_phone_product_page_link = (By.CSS_SELECTOR, 'h4 a.hrefch[href="prod.html?idp_=1"]')
-    locator_product_item_link = (By.CLASS_NAME, 'card')
+    locators = HomePageLocators()
 
     def __init__(self, driver, url: str = None):
         super().__init__(driver, url)
@@ -27,7 +25,7 @@ class HomePage(BasePage):
 
     def click_first_product_page_link(self):
         #TODO move locator to separate module class
-        links = self.find_elements(self.locator_first_product_page_link)
+        links = self.find_elements(self.locators.FIRST_PRODUCT_PAGE_LINK)
         links[0].click()
         #link = self.driver.find_elements(By.CSS_SELECTOR, 'h4 a.hrefch[href*="prod.html?idp_="]')
         #link[0].click()
@@ -36,16 +34,16 @@ class HomePage(BasePage):
         #TODO move locator to separate module class
         #link = self.driver.find_element(By.CSS_SELECTOR, 'a[onclick="byCat(\'monitor\')"]')
         #link.click()
-        menu_link = self.find_element(self.locator_monitors_categorylink)
+        menu_link = self.find_element(self.locators.MONITORS_CATEGORY_LINK)
         menu_link.click()
 
     def count_found_monitors(self):
         delay = 1
         #TODO move locators to separate module class
         try:
-            WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locator_first_phone_product_page_link))
+            WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locators.FIRST_PHONE_PRODUCT_PAGE_LINK))
             wait_more = WebDriverWait(self.driver, timeout=delay)
-            products = wait_more.until(expected_conditions.visibility_of_all_elements_located(self.locator_product_item_link))
+            products = wait_more.until(expected_conditions.visibility_of_all_elements_located(self.locators.PRODUCT_ITEM_LINK))
             actual_products_count = len(products)
         except TimeoutException:
             print("Elements were not found!\n"
@@ -57,9 +55,9 @@ class HomePage(BasePage):
         delay = 1
         #TODO move locators to separate module class
         try:
-            WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locator_first_phone_product_page_link))
+            WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locators.FIRST_PHONE_PRODUCT_PAGE_LINK))
             wait_more = WebDriverWait(self.driver, timeout=delay)
-            products = wait_more.until(expected_conditions.visibility_of_all_elements_located(self.locator_product_item_link))
+            products = wait_more.until(expected_conditions.visibility_of_all_elements_located(self.locators.PRODUCT_ITEM_LINK))
             actual_products_count = len(products)
         except TimeoutException:
             print("Elements were not found!\n"

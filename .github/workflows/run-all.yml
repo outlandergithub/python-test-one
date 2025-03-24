@@ -1,21 +1,39 @@
-name: Run all autotests
-
+name: Run autotests
 
 on:
+  push:
+    branches:
+      - main
+    tags:
+      - **
+  pull_request:
+    types:
+      - opened
+      - closed
+    branches:
+      - main
   workflow_dispatch:
     inputs:
-      deployment_targe:
-        description: select tests to run
+      deployment_target:
+        description: Select tests to run
         required: true
         type: choice
-        default: all
+        default: 'all'
         options:
           - all
+  page_build:
 
 jobs:
+  print_context:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          EVENT_CONTEXT: ${{ toJSON(github.event) }}
+        run: |
+          echo $EVENT_CONTEXT
   run-tests:
     runs-on: ubuntu-latest
-    name: QA tests
+    name: Python API and UI QA autotests
     steps: 
       - name: Copy source code
         uses: actions/checkout@v4

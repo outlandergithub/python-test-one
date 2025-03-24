@@ -1,4 +1,8 @@
+from datetime import datetime
 import re
+
+if __name__ == '__main__':
+    print("First output from function.py file, printed only if run from functions.py directly")
 
 def a1(a, b, c = None):
     print(a,b)
@@ -30,10 +34,10 @@ def c1(*args, **kwargs):
 
 c1()
 
-def c1(*args, **kwargs):
+def c1a(*args, **kwargs):
     print(args, kwargs)
 
-c1(1, 2, 3, x = True, y = "Text")
+c1a(1, 2, 3, x = True, y = "Text")
 
 def c2(*args, **kwargs):
     print(*args, *kwargs)
@@ -70,10 +74,10 @@ d4(*[1, 2, 3], 5)    #[1, 2, 3] list кожен елемент попадає в
 #
 #d41(*[1, 2, 3, 4], 5)    #*[1, 2, 3, 4] list кожен елемент попадає в окрему позиційну змінну. TypeError: d4() takes from 2 to 4 positional arguments but 5 were given
 
-def d4(a, b, *args):
+def d4a(a, b, *args):
     print(a, b, args)
 
-d4(*[1, 2, 3, 4], 5)    #*[1, 2, 3, 4] list кожен елемент міг попасти в окрему позиційну змінну. Іменованих позиційних лише дві "a", "b", вказано args без *
+d4a(*[1, 2, 3, 4], 5)    #*[1, 2, 3, 4] list кожен елемент міг попасти в окрему позиційну змінну. Іменованих позиційних лише дві "a", "b", вказано args без *
                         # Тому з *[1, 2, 3, 4] перші дві цифри попали в окремі позиційні змінні. Рерша попали в tuple
 
 def d5(a, b, *args):
@@ -112,3 +116,21 @@ print(replaced)
 #    line = regex.sub("a" % fileIn, line)
 #    # do something with the updated line
 #    print(line)
+
+def list_of_integers(param:list[str])-> list[int]:
+    print(list(param))
+    return list(param)
+
+list_of_integers(['one', '2', '3'])
+
+alist:list[int] = [1, 2, 3, '4', 5] 
+
+def connect():
+    current_datetime = datetime.now()
+    print("------------ Connect function called here at "+current_datetime.strftime('%m-%d-%Y--%H-%M-%S')+" ------------")
+
+if __name__ == '__main__':
+    connect()
+    print("Last but one output from function.py file, printed only if run from functions.py directly")
+
+print("Last output from function.py file")
