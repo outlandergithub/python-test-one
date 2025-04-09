@@ -1,9 +1,50 @@
-import openpyxl
 from datetime import datetime
-
 from functions import connect
+import sys
+#this sys.path.append( '.' ) should come before the line: from myhelpers import logger
+sys.path.append( '.' )
+from myhelpers import logger
+import logging
+import openpyxl
+from logging.handlers import RotatingFileHandler
 
 print("First output from main.py file")
+print("--------")
+print(sys.executable)  # Shows which Python installation is running
+print(sys.path)       # Shows where Python looks for modules
+print("--------")
+
+# adding additional basic log
+logging.basicConfig(level=logging.DEBUG, filename='./logs/myapp.log')
+
+# adding more logs
+logger = logging.getLogger(__name__)
+stream_h = logging.StreamHandler()
+file_h = logging.FileHandler('./logs/file.log')
+rotating_fh = RotatingFileHandler('./logs/sliced_'+datetime.now().strftime('%m-%d-%Y--%H-%M-%S')+'.log', mode="a", maxBytes= 1000, backupCount=5)
+
+# setting log levels
+# logger.setLevel(logging.WARNING) перетирає = перекриває по пріоритету (оскільки йде нижче в файлі строку logging.basicConfig(level=logging.DEBUG, filename='./logs/myapp.log')
+logger.setLevel(logging.WARNING)
+# stream_h.setLevel(logging.INFO) ні на що не впливає
+stream_h.setLevel(logging.INFO)
+# логуються дійсно лише помилки на рівні
+file_h.setLevel(logging.ERROR)
+
+# setting log formatter
+formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+stream_h.setFormatter(formatter)
+file_h.setFormatter(formatter)
+
+# adding hendlers
+logger.addHandler(stream_h)
+logger.addHandler(file_h)
+logger.addHandler(rotating_fh) 
+
+for x in range(1000):
+    logger.info(f'test info message {x}')
+
+logger.warning('This is a final warning.')
 
 try:
     inv_file = openpyxl.load_workbook("resources/inventory.xlsx")
@@ -54,8 +95,10 @@ try:
     current_datetime = datetime.now()
     #inv_file.save("resources/new-inventory-with-sumtotal-"+current_datetime.strftime('%m-%d-%Y--%H-%M-%S')+".xlsx")
 
-except Exception:
+except Exception as e:
     print("Something happend")
+    logging.error(e, exc_info=True)
+    logger.error('Here comes the error.')
 
 connect()
 

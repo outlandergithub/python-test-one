@@ -37,8 +37,7 @@ class HomePage(BasePage):
         menu_link = self.find_element(self.locators.MONITORS_CATEGORY_LINK)
         menu_link.click()
 
-    def count_found_monitors(self):
-        delay = 2
+    def count_found_monitors(self, delay: int = 2):
         #TODO move locators to separate module class
         try:
             WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locators.FIRST_PHONE_PRODUCT_PAGE_LINK))
@@ -51,8 +50,7 @@ class HomePage(BasePage):
             return 0
         return actual_products_count
     
-    def count_given_monitors(self, count):
-        delay = 1
+    def count_given_monitors(self, count, delay: int = 2):
         #TODO move locators to separate module class
         try:
             WebDriverWait(self.driver, timeout=delay).until(expected_conditions.invisibility_of_element_located(self.locators.FIRST_PHONE_PRODUCT_PAGE_LINK))

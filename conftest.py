@@ -4,16 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
 @pytest.fixture
-def driver():
-    options = Options()
-    options.add_argument('--headless')
-    browser = webdriver.Firefox(options=options)
-    browser.maximize_window()
-    browser.implicitly_wait(5)
-    yield browser
-    browser.close() 
-
-@pytest.fixture
 def obj_id():
     payload = {
         "name": "Apple MacBook Pro 16",
@@ -29,6 +19,16 @@ def obj_id():
     response_json = response.json()
     yield response_json["id"]
     requests.delete(f'https://api.restful-api.dev/objects/{response_json["id"]}', json=payload)
+
+@pytest.fixture
+def driver():
+    options = Options()
+    options.add_argument('--headless')
+    browser = webdriver.Firefox(options=options)
+    browser.maximize_window()
+    browser.implicitly_wait(5)
+    yield browser
+    browser.quit() 
 
 @pytest.fixture(scope='function')
 def before_after():

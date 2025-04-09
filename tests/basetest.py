@@ -1,4 +1,4 @@
-from selenium import *
+import selenium
 
 class BaseTest():
     pass

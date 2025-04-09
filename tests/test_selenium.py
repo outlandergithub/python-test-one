@@ -1,10 +1,11 @@
 import pytest
 from pages.homepage import HomePage
 from pages.productpage import ProductPage
+#from tests.basetest import BaseTest
 from tests.basetest import BaseTest
 
-class TestSelenium():
-#class TestSelenium(BaseTest):
+#class TestSelenium():
+class TestSelenium(BaseTest):
 
 #    def __init__(self, driver):
 #        super().__init__(driver)
@@ -25,7 +26,7 @@ class TestSelenium():
         homepage = HomePage(driver)
         homepage.open_homegape()
         homepage.click_monitors_categorylink()
-        #homepage.count_given_monitors(expected_count)
-        assert homepage.count_found_monitors() == expected_count
+        #homepage.count_given_monitors(expected_count, delay=5)
+        assert homepage.count_found_monitors(delay=5) == expected_count
 
  

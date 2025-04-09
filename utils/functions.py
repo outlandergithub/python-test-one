@@ -1,5 +1,8 @@
+from collections import namedtuple
+from timeit import default_timer, timeit
 from datetime import datetime
 import re
+import json
 
 if __name__ == '__main__':
     print("First output from function.py file, printed only if run from functions.py directly")
@@ -100,7 +103,7 @@ d6(*[1, 2], **{"c":"first", "d":"second"})   #*[1, 2] list кожен елеме
                                                 #потім з **{"c":"first", "d":"second"} "c":"first" пробує попасти в змінну "c", і так далі
 
 s = "Example String"
-replaced = re.sub('[ES]', 'a', s)
+replaced = re.sub('[Eeng]', 'a', s)
 print(replaced)
 
 #line = re.sub(
@@ -124,6 +127,162 @@ def list_of_integers(param:list[str])-> list[int]:
 list_of_integers(['one', '2', '3'])
 
 alist:list[int] = [1, 2, 3, '4', 5] 
+
+string = "   anakonda ana   "
+string2 = string.strip()
+print(string.strip())
+print(string)
+print(string2)
+
+upper = "all lower"
+upper2 = upper.upper()
+print(upper.upper())
+print(upper)
+print(upper2)
+
+one = "all lowel"
+print(one.replace("l", "G"))
+
+two = "one two three"
+print(two.split())
+print(list(two))
+print(set(two))
+
+three = "one, two, three , four "
+print(three.strip().split(","))
+print(''.join(three.split(",")))  
+
+large_list = ['A']*1000000
+start = default_timer()
+#print(''.join(large_list))
+print(timeit(stmt="['A']*100  ", number=1000000))
+''.join(large_list)
+end = default_timer()
+print(end-start)
+
+#oldstyle formatted string
+pi = 3.14123
+formatted = "pi value is %f" % pi
+
+#oldstyle formatted string
+pi = 3.14123
+formatted = "pi value is %f" % pi
+print(formatted)
+
+#oldstyle formatted string with 2 digits=signs after decimal point in floating number
+pi = 3.14123
+formatted = "pi value is %.2f" % pi
+print(formatted)
+
+#oldstyle formatted string without decimal part of a floating number
+pi = 3.14123
+formatted = "pi rounded value is %d" % pi
+print(formatted)
+
+string = 'TEXT'
+formatted = "here comes the %s" % string 
+print(formatted)
+
+#soso style formatted string with 2 digits=signs after decimal point in floating number and second positional variable
+pi = 3.14123
+r = 1
+formatted = "pi value is {:.2f} and radius is {}".format(pi, r)
+print(formatted)
+
+#new style formatted string floating number and second positional variable
+pi = 3.14123
+r = 1
+formatted = f"pi value is {pi} and radius is {r}"  
+print(formatted)
+
+list = [12, -2, 3, -4]
+print(list)
+print(list.sort()) #None
+ordered = list.sort()
+print(list)
+print(ordered) #None
+print(type(ordered)) #<class 'NoneType'>
+sorted = sorted(list)
+print(sorted)
+#sorted2 = sorted(ordered) #error
+#print(sorted2) #TypeError: 'list' object is not callable  
+
+tuple1 = "one", 2, "three"
+print(type(tuple1))
+
+one, two, three = tuple1
+print(one)
+print(two)
+print(three)
+
+tuple2 = (False, 2, "string", 3.14123)
+
+tuple3 = ("first"  )
+print(type(tuple3))
+
+Point = namedtuple('Point', 'x, y')
+p = Point(4, -3)
+print(p.x, p.y)
+
+Dupa = namedtuple('Dupa', 'x, y')
+d = Dupa(1, -2)
+print(d.x, d.y)
+
+person = {"name": "John Doe", "age": 22, "occupation": ["programmer", "entrepreneur"], "married": True, "children": [{"sex": "man", "name": "Rick", "age": 1, "status": "son"}, {"sex": "woman", "name": "Jinny", "age": 2, "status": "daughter"}]}
+# dumps() method used to  present python data converted into json format specifically in string format
+personJson = json.dumps(person, sort_keys=True, indent=4) 
+print(personJson)
+# loads() method used to deserialize json data presented in string format back to python object
+personDictionary = json.loads(personJson)
+print(personDictionary)
+
+class User:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    def user_json_endode(self):
+        if isinstance(self, User):
+            return {'name': self.name, 'age': self.age, self.__class__.__name__: True}
+        else:
+            raise TypeError('Object is not serializable')
+
+    def user_json_decode(self):
+        if User.__name__ in self:
+            return User(name=self['name'], age=self['age'])
+        else:
+            return self
+
+test_user = User("Alan Wake", 42)
+
+test_user_json = json.dumps(test_user, default=User.user_json_endode)
+print(test_user_json)
+
+from json import JSONEncoder
+
+class UserEncoder(JSONEncoder):
+    def default(self, o):
+        if isinstance(o, User):
+            return {'name': o.name, 'age': o.age, o.__class__.__name__: True}
+        else:
+            return JSONEncoder.default(self, o)
+
+# usual method to encode python object to json
+second_test_user = json.dumps(test_user, cls=UserEncoder)
+print(second_test_user)
+# usual method to decode json back to python object
+deserialized_second_test_user = json.loads(second_test_user)
+print(deserialized_second_test_user["name"])
+
+# alternative method to encode python object to json
+third_test_user = UserEncoder().encode(test_user)
+print(third_test_user)
+deserialized_third_test_user = json.loads(third_test_user)
+print(deserialized_third_test_user["age"])
+
+# alternative method to decode json back to python object
+user_object = json.loads(third_test_user, object_hook=User.user_json_decode)
+print(user_object.name)
 
 def connect():
     current_datetime = datetime.now()

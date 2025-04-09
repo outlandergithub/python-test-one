@@ -1,6 +1,6 @@
 from typing import Generator
 import pytest
-from playwright.sync_api import Playwright, Page, APIRequestContext, expect
+from playwright.sync_api import Playwright, APIRequestContext
 
 @pytest.fixture(scope="session")
 def api_request_context(playwright: Playwright) -> Generator[APIRequestContext, None, None]:
