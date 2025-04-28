@@ -26,3 +26,5 @@ class ProductPage(BasePage):
         actual_product_title = product_page.text
         assert actual_product_title == title
         #return actual_product_title 
+
+        

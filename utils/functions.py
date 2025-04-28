@@ -284,12 +284,38 @@ print(deserialized_third_test_user["age"])
 user_object = json.loads(third_test_user, object_hook=User.user_json_decode)
 print(user_object.name)
 
+def count_user_input():
+    inputted = input("Enter any word: ")
+#    length = len(inputted)
+#   if length > 0:
+#        print(f'You have entered {length} symbols')
+    if (length := len(inputted)) > 0:
+        print(f'You have entered {length} symbols')
+
+def numbers_counter():
+    numlist = [1, 2, 3, 4, 5]
+#    length = len(numlist)
+#    while length > 0:
+    while (length := len(numlist)) > 0:
+        print(f'{length} numbers in numlist')
+        numlist.pop()
+ #       length = len(numlist)
+
+def booltest():
+    if bool('') == bool(''):
+        print(">>>>>>>>>>>>>>>>>>>>>>>>not equal")
+    else:
+        print("equal<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
 def connect():
     current_datetime = datetime.now()
     print("------------ Connect function called here at "+current_datetime.strftime('%m-%d-%Y--%H-%M-%S')+" ------------")
 
 if __name__ == '__main__':
+    booltest()
     connect()
+    numbers_counter()
+    count_user_input()
     print("Last but one output from function.py file, printed only if run from functions.py directly")
 
 print("Last output from function.py file")
