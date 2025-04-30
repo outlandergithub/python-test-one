@@ -3,6 +3,7 @@ import os
 import re
 import time
 import decimal
+import hashlib
 
 context = decimal.getcontext()
 context.rounding = decimal.ROUND_DOWN
@@ -61,3 +62,14 @@ print(matches1)
 print(matches2)
 print(matches3)
 
+def sha256(text: str) -> str:
+    m = hashlib.sha256()
+    print(type(m))
+    print(m.__class__)
+    m.update(bytes(text,'utf8'))
+    return m
+    
+
+
+sha256('asdasdfasdaf')
+print(sha256('asdasdfasdaf'))
