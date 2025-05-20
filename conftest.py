@@ -1,10 +1,12 @@
+from typing import Any, Generator
 import pytest
 import requests
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.webdriver import WebDriver
 
-@pytest.fixture
-def obj_id():
+@pytest.fixture(name="obj_id")
+def fixture_obj_id():
     payload = {
         "name": "Apple MacBook Pro 16",
         "data": {
@@ -18,10 +20,10 @@ def obj_id():
     response = requests.post("https://api.restful-api.dev/objects", json=payload)
     response_json = response.json()
     yield response_json["id"]
-    requests.delete(f'https://api.restful-api.dev/objects/{response_json["id"]}', json=payload)
+    requests.delete(f'https://api.restful-api.dev/objects/{response_json["id"]}')
 
-@pytest.fixture
-def driver():
+@pytest.fixture(name="driver")
+def fixture_driver() -> Generator[WebDriver, Any, None]:
     options = Options()
     options.add_argument('--headless')
     browser = webdriver.Firefox(options=options)
@@ -30,8 +32,8 @@ def driver():
     yield browser
     browser.quit() 
 
-@pytest.fixture(scope='function')
-def before_after():
+@pytest.fixture(scope='function', name="before_after")
+def fixture_before_after():
     print("Fixture before running test")
     yield
     print("Fixture after running test")

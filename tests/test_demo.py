@@ -16,6 +16,7 @@ def test_failed(before_after: None):
 def test_skipped(before_after: None):
     assert not "one" == "one"
 
+@pytest.mark.slow()
 def test_None():
     sentinel = object()
     guard = None

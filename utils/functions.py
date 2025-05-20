@@ -302,7 +302,7 @@ def numbers_counter():
  #       length = len(numlist)
 
 def booltest():
-    if bool('') == bool(''):
+    if bool('') != bool(''):
         print(">>>>>>>>>>>>>>>>>>>>>>>>not equal")
     else:
         print("equal<<<<<<<<<<<<<<<<<<<<<<<<<<<<")

@@ -1,5 +1,4 @@
-from selenium import *
-
+import selenium
 class BasePage():
     
     def __init__(self, driver, url: str = None):
