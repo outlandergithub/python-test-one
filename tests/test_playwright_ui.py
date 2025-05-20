@@ -49,7 +49,7 @@ def fixture_browser_type_launch_args(browser_type_launch_args: dict, sub_request
     return {
         **browser_type_launch_args,
         **sub_request,
-        "headless": True
+        "headless": False
     }
 
 @pytest.fixture(scope="function", name="browser_context_args")
