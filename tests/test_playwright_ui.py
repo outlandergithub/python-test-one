@@ -211,22 +211,26 @@ def test_list_playwright_devices(playwright: Playwright):
         print(f"{len(playwright.devices)}\n")
         print(playwright.devices[("Desktop Firefox")])
 
-def test_second_context(page, context: BrowserContext):
+def test_second_context(page: Page, context: BrowserContext):
     page.goto("https://nomads.com/")
     with context.expect_page() as new_page_info:
         page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.click()
     link_text = page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.inner_text()
     second_page = new_page_info.value
-    assert second_page.title() in link_text
+    second_page.wait_for_load_state('domcontentloaded')
+    assert second_page.title() is not ''
+    assert link_text in second_page.title()
     #expect(second_page).to_have_title("")    
 
-def test_third_context(page, context: BrowserContext):
+def test_third_context(page: Page, context: BrowserContext):
     page.goto("https://nomads.com/")
     with context.expect_event("page") as event_info:
         page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.click()
     link_text = page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.inner_text()
-    new_page = event_info.value
-    assert new_page.title() in link_text
+    new_page: Page = event_info.value
+    new_page.wait_for_load_state('domcontentloaded')
+    assert new_page.title() is not ''
+    assert link_text in new_page.title()
 
 @pytest.mark.only_browser("chromium")
 def test_multiple_contexts(page: Page, new_context: CreateContextCallback):
@@ -240,6 +244,19 @@ def test_multiple_contexts(page: Page, new_context: CreateContextCallback):
     print(page2.title())
 
 @pytest.mark.slow
+def test_cryptocommercial_io_contact_form_filled(page: Page) -> None:
+    switch_the_page(page, "https://cryptocommercial.io/pl/")
+    #page.goto("https://cryptocommercial.io/pl/")
+    page.hover(".lang_wallet--curency")
+    expect(page.get_by_role("link", name="USD")).to_be_visible()
+    page.get_by_role("link", name="USD").click()
+    page.hover("div.lang_wallet--planet > svg")
+    expect(page.get_by_role("link", name="ENG")).to_be_visible()
+    page.get_by_role("link", name="ENG").click()
+    page.get_by_role("link", name="About", exact=True).click()
+    expect(page.get_by_role("main")).to_contain_text("Who we are?")
+
+@pytest.mark.skip
 def test_cryptocommercial_io_registration_written_with_codegen_and_debugged_with_inspector(page: Page) -> None:
     switch_the_page(page, "https://cryptocommercial.io/pl/")
     #page.goto("https://cryptocommercial.io/pl/")
@@ -251,34 +268,34 @@ def test_cryptocommercial_io_registration_written_with_codegen_and_debugged_with
     page.get_by_role("link", name="ENG").click()
     page.get_by_role("link", name="About", exact=True).click()
     expect(page.get_by_role("main")).to_contain_text("Who we are?")
-    #page.get_by_role("main").get_by_role("link", name="Register").click()
-    #expect(page.get_by_text("Welcome to CryptoCommercial!")).to_be_visible()
-    #expect(page.get_by_role("textbox", name="Name*")).to_be_empty()
-    #page.get_by_role("textbox", name="Name*").click()
-    #page.get_by_role("textbox", name="Name*").fill("alanwake")
-    #expect(page.get_by_role("textbox", name="Email*")).to_be_empty()
-    #page.get_by_role("textbox", name="Email*").click()
-    #page.get_by_role("textbox", name="Email*").fill("stakejimmy@gmail.com")
-    #expect(page.get_by_role("textbox", name="Password*", exact=True)).to_be_empty()
-    #page.get_by_role("textbox", name="Password*", exact=True).click()
-    #page.get_by_role("textbox", name="Password*", exact=True).fill("test1234")
-    #expect(page.get_by_role("textbox", name="Confirm new password*")).to_be_empty()
-    #page.get_by_role("textbox", name="Confirm new password*").click()
-    #page.get_by_role("textbox", name="Confirm new password*").fill("test1234")
-    #expect(page.locator("#wppb-form-element-27 div")).to_be_visible()
-    #page.locator("#wppb-form-element-27 div").click()
-    #expect(page.get_by_role("button", name="Register")).to_be_visible()
-    #page.get_by_role("button", name="Register").click()
-    #expect(page.get_by_text("Email Verification")).to_be_visible()
-        #expect(page.locator("#mo_site_otp_form")).to_contain_text("There was an error in sending the OTP.")
-        #expect(page.locator("#mo_site_otp_form")).to_have_text("Email VerificationThere was an error in sending the OTP. " \
-        #"Please enter a valid email id or contact site Admin." \
-        #"{{OTP_STYLE}} {{VALIDATE_BUTTON_OTP}} {{REQUIRED_FIELDS}}{{RESEND_OTP}}{{LOADER_IMG}}")
-        #expect(page.locator("div.mo_customer_validation-modal-body.center > div:nth-child(1)")).to_contain_text("Please check your email. " \
-        #"The 6-digit verification code was sent to stakejimmy@gmail.com. Pay attention that the code is valid for 10 minutes.")
-    #assert(page.inner_text("#mo_site_otp_form") == page.locator("#mo_site_otp_form").inner_text())
-    #page.locator("div.mo_customer_validation-modal-header > a.close").click()
-    #expect(page.get_by_text("Email Verification")).not_to_be_visible()
+    page.get_by_role("main").get_by_role("link", name="Register").click()
+    expect(page.get_by_text("Welcome to CryptoCommercial!")).to_be_visible()
+    expect(page.get_by_role("textbox", name="Name*")).to_be_empty()
+    page.get_by_role("textbox", name="Name*").click()
+    page.get_by_role("textbox", name="Name*").fill("alanwake")
+    expect(page.get_by_role("textbox", name="Email*")).to_be_empty()
+    page.get_by_role("textbox", name="Email*").click()
+    page.get_by_role("textbox", name="Email*").fill("stakejimmy@gmail.com")
+    expect(page.get_by_role("textbox", name="Password*", exact=True)).to_be_empty()
+    page.get_by_role("textbox", name="Password*", exact=True).click()
+    page.get_by_role("textbox", name="Password*", exact=True).fill("test1234")
+    expect(page.get_by_role("textbox", name="Confirm new password*")).to_be_empty()
+    page.get_by_role("textbox", name="Confirm new password*").click()
+    page.get_by_role("textbox", name="Confirm new password*").fill("test1234")
+    expect(page.locator("#wppb-form-element-27 div")).to_be_visible()
+    page.locator("#wppb-form-element-27 div").click()
+    expect(page.get_by_role("button", name="Register")).to_be_visible()
+    page.get_by_role("button", name="Register").click()
+    expect(page.get_by_text("Email Verification")).to_be_visible()
+    expect(page.locator("#mo_site_otp_form")).to_contain_text("There was an error in sending the OTP.")
+    expect(page.locator("#mo_site_otp_form")).to_have_text("Email VerificationThere was an error in sending the OTP. " \
+    "Please enter a valid email id or contact site Admin." \
+    "{{OTP_STYLE}} {{VALIDATE_BUTTON_OTP}} {{REQUIRED_FIELDS}}{{RESEND_OTP}}{{LOADER_IMG}}")
+    expect(page.locator("div.mo_customer_validation-modal-body.center > div:nth-child(1)")).to_contain_text("Please check your email. " \
+    "The 6-digit verification code was sent to stakejimmy@gmail.com. Pay attention that the code is valid for 10 minutes.")
+    assert(page.inner_text("#mo_site_otp_form") == page.locator("#mo_site_otp_form").inner_text())
+    page.locator("div.mo_customer_validation-modal-header > a.close").click()
+    expect(page.get_by_text("Email Verification")).not_to_be_visible()
 
 #PARAMETRIZED TESTS
 @pytest.mark.parametrize("indirect_fixture", ['google'], indirect=True)
