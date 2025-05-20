@@ -21,12 +21,6 @@ on:
           - regression
 
 jobs:
-  run-listers:
-    runs-on: ubuntu-latest
-    name: Python linter
-    steps:
-      - uses: actions/checkout@v4
-      - uses: chartboost/ruff-action@v1
   run-tests:
     runs-on: ubuntu-latest
     name: Python API and UI QA autotests
