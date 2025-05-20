@@ -1,8 +1,8 @@
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, BrowserContext
 
 def test_sync_test():
     with sync_playwright() as p:
-        browser_context = p.chromium.launch(headless=True).new_context()
+        browser_context: BrowserContext = p.chromium.launch(headless=True).new_context()
         page = browser_context.new_page()
         page.goto("https://f.ua")
         request_context = p.request.new_context(base_url="https://api.github.com")

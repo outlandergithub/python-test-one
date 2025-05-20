@@ -1,10 +1,8 @@
 import os
 import re
-from signal import pause
-from time import timezone
 from typing import Dict
 from attr import asdict
-from playwright.sync_api import Page, expect, Playwright, Browser, Route
+from playwright.sync_api import Page, expect, Playwright, Browser, Route, BrowserContext
 from pytest_playwright.pytest_playwright import CreateContextCallback
 from _pytest.fixtures import SubRequest
 import pytest
@@ -14,7 +12,7 @@ import pytest
 #tests: test modules or classes can use the ``pytest.mark.usefixtures(fixturename)`` marker
 
 @pytest.fixture(name="testpage")
-def fixture_testpage(context):
+def fixture_testpage(context: BrowserContext):
     page = context.new_page()
     page.set_viewport_size({"width":2000, "height":1000})
     yield page
@@ -82,8 +80,8 @@ def fixture_seeded_indirect_page_fixture(page, request: pytest.FixtureRequest):
     if param[0] == "ask":
         page.goto("https://ask.com")
         return page
-    if param[0] == "bing":
-        page.goto("https://bing.com")
+    if param[0] == "baidu":
+        page.goto("https://www.baidu.com")
         return page
     elif param[0] == "google":
         page.goto("https://google.co.uk")
@@ -94,8 +92,8 @@ def fixture_seeded_indirect_page_fixture(page, request: pytest.FixtureRequest):
 #    param = request.param
 #    if param[0] == "ask":
 #        return str("Ask.com - What's Your Question?")
-#    if param[0] == "bing":
-#        return str("Suche – Microsoft Bing")
+#    if param[0] == "baidu":
+#        return str("百度一下，你就知道")
 #    elif param[0] == "google":
 #        return str("Google")
 
@@ -128,8 +126,8 @@ def generate_pairs():
 
 def get_argvalues():
     #parametrized_search_engines = []
-    search_engines_names = ["google","bing","ask"]
-    search_engines_titles = ["Google","Suche – Microsoft Bing","Ask.com - What's Your Question?"]
+    search_engines_names = ["google","baidu","ask"]
+    search_engines_titles = ["Google","百度一下，你就知道","Ask.com - What's Your Question?"]
     #for engine in search_engines:
     #    parametrized_search_engines.append(pytest.param((engine), id=f"{engine}"))
     parametrized_search_engines = list(zip(search_engines_names,search_engines_titles))
@@ -154,14 +152,14 @@ def test_fixture_browser_context_args(page: Page, playwright: Playwright, browse
     print(page.viewport_size)
     #new page with new context with new viewport values
     new_browser = playwright.chromium
-    launched_new_browser = new_browser.launch(headless=False)
+    launched_new_browser = new_browser.launch(headless=True)
     launched_new_browser_context = launched_new_browser.new_context(viewport={"width": 1600,"height": 1380})
     launched_new_browser_context_page = launched_new_browser_context.new_page() # higher priority than @pytest.mark.browser_context_args(viewport={"width": 1920,"height": 900})
     print(len(launched_new_browser.contexts))
     print(launched_new_browser.contexts[0].cookies())
     print(launched_new_browser_context.cookies())
     print(launched_new_browser_context_page.viewport_size)
-    launched_new_browser_context_page.on("request", lambda request: print(request.all_headers()))
+    launched_new_browser_context_page.on("request", lambda request: print(request.all_headers()) if re.match(r"https://reqres.in/api/users*", request.url) else print(request.url))
     launched_new_browser_context_page.goto("https://reqres.in/")
     print(launched_new_browser.contexts[0].cookies())
     launched_new_browser.contexts[0].add_cookies([{"name": "SECOND", "value": "SECOND_VALUE", "url": "https://reqres.in", "expires": -1, "httpOnly": False, "secure": False, "sameSite": "None"}])
@@ -213,7 +211,7 @@ def test_list_playwright_devices(playwright: Playwright):
         print(f"{len(playwright.devices)}\n")
         print(playwright.devices[("Desktop Firefox")])
 
-def test_second_context(page, context):
+def test_second_context(page, context: BrowserContext):
     page.goto("https://nomads.com/")
     with context.expect_page() as new_page_info:
         page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.click()
@@ -222,13 +220,13 @@ def test_second_context(page, context):
     assert second_page.title() in link_text
     #expect(second_page).to_have_title("")    
 
-# def test_third_context(page, context):
-#     page.goto("https://nomads.com/")
-#     with context.expect_event("page") as event_info:
-#         page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.click()
-#     link_text = page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.inner_text()
-#     new_page = event_info.value
-#     assert new_page.title() in link_text
+def test_third_context(page, context: BrowserContext):
+    page.goto("https://nomads.com/")
+    with context.expect_event("page") as event_info:
+        page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.click()
+    link_text = page.locator("//div[@class='item show grid-side-box item-latest-jobs not-a-place ignore-click']//child::a").first.inner_text()
+    new_page = event_info.value
+    assert new_page.title() in link_text
 
 @pytest.mark.only_browser("chromium")
 def test_multiple_contexts(page: Page, new_context: CreateContextCallback):
@@ -298,11 +296,11 @@ def test_parametrized_generated_pairs(page: Page, credentials):
     expect(page.locator("span[data-language='login_error_pass']")).to_have_text("Невірний логін або пароль")
     assert((page.locator("span[data-language='login_error_pass']").inner_text()) == "Невірний логін або пароль")
 
-@pytest.mark.browser_context_args(locale="de-DE", timezone_id="Europe/Berlin")
+@pytest.mark.browser_context_args(timezone_id="Europe/Berlin")
 @pytest.mark.parametrize("seeded_indirect_page_fixture", get_argvalues(), indirect=True)
 def test_parametrized_seeded_indirect_page_title_fixture(seeded_indirect_page_fixture: Page):
     list_search_engines_titles = ["Google", 
-                                  "Suche – Microsoft Bing", 
+                                  "百度一下，你就知道", 
                                   "Ask.com - What's Your Question?"]
     set_search_engines_titles = set(list_search_engines_titles)
     title = seeded_indirect_page_fixture.title()

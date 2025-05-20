@@ -25,7 +25,7 @@ def fixture_obj_id():
 @pytest.fixture(name="driver")
 def fixture_driver() -> Generator[WebDriver, Any, None]:
     options = Options()
-    #options.add_argument('--headless')
+    options.add_argument('--headless')
     browser = webdriver.Firefox(options=options)
     browser.maximize_window()
     browser.implicitly_wait(5)

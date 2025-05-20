@@ -8,3 +8,10 @@ __pycache__
 */.DS_Store
 logs
 */logs
+Downloaded/
+Downloaded/*
+browser_storage_state.json
+.auth/
+.auth/*
+test-results/
+test-results/*

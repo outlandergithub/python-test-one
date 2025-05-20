@@ -1,14 +1,17 @@
 from numbers import Number
 from operator import is_not
+from pathlib import Path
 from typing import Dict, Generator
 import pytest
-from playwright.sync_api import Playwright, APIRequestContext, Page, expect
+from playwright.sync_api import Playwright, APIRequestContext, Page, expect, BrowserContext
 
 #FIXTURES
 @pytest.fixture(name="clientam_request_context")
 def fixture_clientam_request_context(playwright: Playwright, page):
     page.goto("https://www.clientam.com/sso/Login")
-    browser_storage_state = page.context.storage_state(path="browser_storage_state.json",indexed_db=True)
+    mypath = Path().absolute()
+    browser_storage_state = page.context.storage_state(path=f"{mypath}/.auth/browser_storage_state.json",indexed_db=True)
+    print()
     request_context = playwright.request.new_context(
         base_url="https://www.clientam.com",
         storage_state=browser_storage_state
@@ -28,7 +31,7 @@ def fixture_reqres_request_context(playwright: Playwright) -> Generator[APIReque
 
 @pytest.fixture(scope="session", name="page_request_context")
 def fixture_page_request_context(playwright: Playwright):
-        browser_context = playwright.chromium.launch(headless=False, slow_mo=500).new_context()
+        browser_context: BrowserContext = playwright.chromium.launch(headless=True, slow_mo=500).new_context()
         page = browser_context.new_page()
         page.goto("https://gmail.com")
         print("Before yield --------")
